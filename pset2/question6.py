@@ -60,4 +60,3 @@ print('Jzy:\n', Jzy)
 
 # Hermitian check
 print(f'Checking hermitian:\n(Jxy)\n {np.conj(Jxy.T)}\n(Jzy)\n {np.conj(Jzy.T)==Jzy}')
-
