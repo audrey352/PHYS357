@@ -4,6 +4,7 @@ def genbasis(xyz):
     row_1 = np.array([1,0,0]) if xyz=='x' else (np.array([0,1,0]) if xyz=='y' else np.array([0,0,1]))
     row_2 = np.array([0,1,0]) if xyz=='x' else np.array([1,0,0])
     row_3 = np.cross(row_1, row_2)
+    row_3 = row_3/np.linalg.norm(row_3)
 
     A = np.array([row_1, row_2, row_3])
     return A
