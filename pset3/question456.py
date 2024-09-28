@@ -1,4 +1,8 @@
 import numpy as np
+import scipy as sp
+import matplotlib.pyplot as plt
+
+hbar = sp.constants.hbar
 
 # Coordinates
 greenwich_lat = 51.476852
@@ -125,3 +129,39 @@ initial_angle = angle_between_vectors(m_cart, g_cart)
 current_angle = angle_between_vectors(m_cart_rotated, G@g_cart)
 print(f'Initial angle between Montreal and Greenwich: {initial_angle}')
 print(f'Angle between Montreal and Greenwich: {current_angle}')
+
+
+# Question 6
+print('\nQuestion 6')
+
+gamma = np.linspace(0.01, 0.001, 100)
+
+# Get orthogonal vectors
+n1 = np.array([1,0,0])
+n2 = np.array([0,1,0])
+n3 = np.array([0,0,1])
+
+# Get rotation matrices, shape (N_gamma,3,3)
+R1 = np.array([genrot(n1, g) for g in gamma])
+R2 = np.array([genrot(n2, g) for g in gamma])
+R3 = np.array([genrot(n3, g) for g in gamma])
+
+# Commutators
+R1R2 = np.array([R1[i]@R2[i] - R2[i]@R1[i] for i in range(len(gamma))])
+pred = np.array([np.eye(3)-R3[i] for i in range(len(gamma))])
+
+# Errors
+errors = np.array([np.linalg.norm(R1R2[i]) for i in range(len(gamma))])
+R1R2_max = np.array([np.max(np.abs(R1R2[i])) for i in range(len(gamma))])
+R1R2_max_err = np.array([np.max(np.abs(R1R2[i]-pred[i])) for i in range(len(gamma))])
+
+# Plot
+plt.plot(gamma, R1R2_max, label='Max in [R1,R2]')
+plt.plot(gamma, errors, label='Error')
+# plt.plot(gamma, R1R2_max_err, label='Max error')
+plt.xlabel(r'$\gamma$')
+plt.legend()
+plt.savefig('question6.png')
+plt.show()
+
+
