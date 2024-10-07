@@ -34,18 +34,23 @@ print(f"Eigenstates of Jx:\n{eigvec_Jx}")
 print(f"Eigenvalues of Jy: {eigvals_Jy}")
 print(f"Eigenstates of Jy:\n{eigvec_Jy}")
 
-# Raising & lowering operators in the Jz basis
-J_plus = Jx + 1j*Jy
-J_minus = Jx - 1j*Jy
-print(f"J_plus:\n{J_plus}")
-print(f"J_minus:\n{J_minus}")
+# Raising & lowering operators in the Jx basis
+J_plus_x = Jy + 1j*Jz
+J_minus_x = np.conj(J_plus_x).T
+print(f"J_plus:\n{J_plus_x}")
+print(f"J_minus:\n{J_minus_x}")
+# Raising & lowering operators in the Jy basis
+J_plus_y = Jz + 1j*Jx
+J_minus_y = np.conj(J_plus_y).T
+print(f"J_plus:\n{J_plus_y}")
+print(f"J_minus:\n{J_minus_y}")
 
 # Apply the raising operator to the eigenstates
-Jx_eigvec_raised = J_plus@eigvec_Jx
-Jy_eigvec_raised = J_plus@eigvec_Jy
+Jx_eigvec_raised = J_plus_x@eigvec_Jx
+Jy_eigvec_raised = J_plus_y@eigvec_Jy
 # Apply the lowering operator to the eigenstates
-Jx_eigvec_lowered = J_minus@eigvec_Jx
-Jy_eigvec_lowered = J_minus@eigvec_Jy
+Jx_eigvec_lowered = J_minus_x@eigvec_Jx
+Jy_eigvec_lowered = J_minus_y@eigvec_Jy
 
 print(f"Raised Jx eigenstates:\n{Jx_eigvec_raised}")
 print(f"Raised Jy eigenstates:\n{Jy_eigvec_raised}")
