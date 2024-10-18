@@ -11,6 +11,8 @@ Jy = 1/np.sqrt(2)*np.array([[0,-1j,0],[1j,0,-1j],[0,1j,0]])
 Jz = np.array([[1,0,0],[0,0,0],[0,0,-1]])
 J_squared = Jx@Jx + Jy@Jy + Jz@Jz
 
+print(np.linalg.eigh(Jz))
+
 # Question 5
 # Calculate the commutators
 # print(f"[Jx,Jy]\n{commutator(Jx,Jy)}")
