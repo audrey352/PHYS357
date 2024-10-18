@@ -2,7 +2,7 @@ import numpy as np
 import scipy.constants as const
 hbar = const.hbar
 
-np.set_printoptions(precision=4) #settings to make arrays easier to read
+np.set_printoptions(precision=4) # settings to make arrays easier to read
 np.set_printoptions(suppress=True)
 
 # Functions
@@ -31,7 +31,9 @@ def R_matrix_z(theta):
     return np.array([r1,r2,r3])
 
 def R_from_J(J,th):
-    #rotation about an axis is exp(-i th J/hbar)
+    """
+    rotation about an axis is exp(-i th J/hbar)
+    """
     e,v=np.linalg.eigh(J)
     e_new=-1j*th*e
     return v@np.diag(np.exp(e_new))@v.conj().T
