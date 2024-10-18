@@ -22,6 +22,26 @@ def de_angle(mat):
         mm[:,i] = mm[:,i]/np.exp(1J*th)
     return mm
 
+def R_from_J(J,th):
+    """
+    rotation about an axis is exp(-i th J/hbar)
+    """
+    e,v=np.linalg.eigh(J)
+    e_new=-1j*th*e
+    return v@np.diag(np.exp(e_new))@v.conj().T  
+
+def R_matrix(theta):
+    """
+    Rotation matrix for an angle theta
+    rotate a state around n in the n basis
+    """
+    r0 = [np.exp(1j*2*theta),0,0,0,0]
+    r1 = [0,np.exp(1j*theta),0,0,0]
+    r2 = [0,0,1,0,0]
+    r3 = [0,0,0,np.exp(-1j*theta),0]
+    r4 = [0,0,0,0,np.exp(-1j*2*theta)]
+    return np.array([r0,r1,r2,r3,r4])    
+
 
 # Setting up the problem -------------------------------------
 j = 2
@@ -78,6 +98,7 @@ print("\nPart D")
 # Jx eigenstates
 ex,vx = np.linalg.eigh(Jx)
 ex,vx = np.flipud(ex), np.fliplr(vx)
+xket = vx
 xbra = np.conj(vx).T  # expressed in Jz basis, use to rotate to Jx basis
 
 # Compute probability for Jx eigenstates
@@ -94,15 +115,16 @@ print("Part A")
 # Jy eigenstates
 ey,vy = np.linalg.eigh(Jy)
 ey,vy = np.flipud(ey), np.fliplr(vy)
-ybra = np.conj(vy).T  # expressed in Jz basis, use to rotate to Jy basis
+yket = vy
+ybra = np.conj(yket).T  # expressed in Jz basis, use to rotate to Jy basis
 
 # |2,2>y in the Jz basis
-state_y_in_z = de_angle(vy)[:,0]
-print(f'|2,2>y in Jz basis: {np.round(state_y_in_z,2)}')
+state_y_bra = de_angle(yket)[:,0]
+print(f'|2,2>y in Jz basis: {np.round(state_y_bra,2)}')
 # other method: transforming from y to z basis
 # Jz isnt normalized so need /2 to have the state (1,0,0,0,0) with eigenvalue 2hbar
 # instead of (2,0,0,0,0) with eigenvalue hbar
-rotated_y_to_z = vy@(Jz[:,0]/2)
+rotated_y_to_z = yket@(Jz[:,0]/2)
 phase = np.exp(1j*np.pi)  # phase to make amplitude of Jz=+2hbar real and positive. 
 print(f'                    {np.round(rotated_y_to_z*phase,2)}')
 
@@ -114,14 +136,48 @@ print(f'|2,2>y in Jy basis: {Jz[:,0]/2}')
 
 # Part B
 print("\nPart B")
-state_ket = state_y_in_z.conj().T
+state_y_ket = state_y_bra.conj().T
 # Note: uncertainty values are real, using .real to remove the 
 # imaginary part (which is 0) when printing 
-uncert_Jx = uncertainty(state_ket, state_y_in_z, Jx)
+
+# Calculate uncertainties for Jx and Jz
+uncert_Jx = uncertainty(state_y_ket, state_y_bra, Jx)
 print(f"Uncertainty for Jx: {uncert_Jx.real:.2f} hbar")
-uncert_Jz = uncertainty(state_ket, state_y_in_z, Jz)
+uncert_Jz = uncertainty(state_y_ket, state_y_bra, Jz)
 print(f"Uncertainty for Jz: {uncert_Jz.real:.2f} hbar")
 
-# Uncertainty relation: σJxσJz ≥ 1/2|<Jy>|
+# Checkig uncertainty relation: σ(Jx)σ(Jz) ≥ 1/2|<Jy>|
 print(f"σ(Jx)σ(Jz) = {uncert_Jx.real*uncert_Jz.real:.2f} hbar^2")
-print(f"1/2|<Jy>| = {np.abs(state_ket@Jy@state_y_in_z).real/2:.2f} hbar^2")
+print(f"1/2|<Jy>| = {np.abs(state_y_ket@Jy@state_y_bra).real/2:.2f} hbar^2")
+
+
+# Question 6 -------------------------------------
+print('\nQuestion 6')
+
+# Part A
+print("Part A")
+# Rotation matrix (90 deg around y-axis)
+theta = np.pi/2
+Ry = R_from_J(Jy,theta)
+print(f'Rotation matrix:\n{np.round(np.abs(Ry),2)}')
+# Other method
+R_in_y = R_matrix(theta)  # rotate around y-axis, in Jy basis
+R = yket@R_in_y@ybra # rotate the state expressed in Jz basis
+# print(np.round(np.abs(R),2))  # gives same thing as above
+
+# Part B
+print("\nPart B")
+# Initial state, |2,2>z
+print(f'|2,2>z: {np.round(state_ket,2)}')
+# Rotate |2,2>z --> |2,2>x
+state_rotated = Ry@state_ket
+print(f"Rotated |2,2>z: {np.round(state_rotated.real,2)}")  # values are real, using .real just for printing clarity
+state_x_in_z = vx[:,0]
+print(f"Expected |2,2>x: {np.round(state_x_in_z,2)}")
+
+# Rotate |2,2>x --> |2,-2>z
+state_rotated2 = Ry@state_rotated
+print(f'Rotated |2,2>x: {np.round(state_rotated2,2).real}')  # values are real, using .real just for printing clarity
+# print(np.round(R@state_x_in_z,2).real)  # gives the same thing! (just another method)
+state_z2 = Jz[:,4]/(-2)  # dividing by -2 to get the correct normalization for the eigenvalue -2hbar
+print(f'Expected |2,-2>z: {np.round(state_z2,2)}')

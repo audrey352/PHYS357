@@ -10,7 +10,7 @@ plt.ion()
 np.set_printoptions(precision=4) #settings to make arrays easier to read
 np.set_printoptions(suppress=True)
 
-j=4/2  #set our max m, reminder that total angular momentum is j(j+1)hbar^2
+j=2/2  #set our max m, reminder that total angular momentum is j(j+1)hbar^2
 m=np.linspace(j,-j,int(2*j)+1) #this will give us our allowed m's
 print(m)  #double check we got that right, in particular, spacing should be 1
 
@@ -65,10 +65,12 @@ ex=np.flipud(ex) #syntactic sugar to make eigenvalue ordering the same
 vx=np.fliplr(vx)
 
 Jy=(Jp-Jm)/2J
+
 ey,vy=np.linalg.eigh(Jy)
 print('y eigenvalues: ',ey)
 ey=np.flipud(ey)
 vy=np.fliplr(vy)
+print(vy)
 
 Jz=np.diag(m)
 Jyp=Jz+1J*Jx
