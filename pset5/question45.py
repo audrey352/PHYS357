@@ -8,6 +8,7 @@ def uncertainty(bra, ket, J):
     """
     Calculate the uncertainty of a measurement
     sigma(A) = sqrt(<A^2> - <A>^2)
+    * all matrices need to be expressed in the same basis
     """
     term1 = bra@J@J@ket  # <J^2>
     term2 = (bra@J@ket)**2  # <J>^2
@@ -113,3 +114,14 @@ print(f'|2,2>y in Jy basis: {Jz[:,0]/2}')
 
 # Part B
 print("\nPart B")
+state_ket = state_y_in_z.conj().T
+# Note: uncertainty values are real, using .real to remove the 
+# imaginary part (which is 0) when printing 
+uncert_Jx = uncertainty(state_ket, state_y_in_z, Jx)
+print(f"Uncertainty for Jx: {uncert_Jx.real:.2f} hbar")
+uncert_Jz = uncertainty(state_ket, state_y_in_z, Jz)
+print(f"Uncertainty for Jz: {uncert_Jz.real:.2f} hbar")
+
+# Uncertainty relation: σJxσJz ≥ 1/2|<Jy>|
+print(f"σ(Jx)σ(Jz) = {uncert_Jx.real*uncert_Jz.real:.2f} hbar^2")
+print(f"1/2|<Jy>| = {np.abs(state_ket@Jy@state_y_in_z).real/2:.2f} hbar^2")
