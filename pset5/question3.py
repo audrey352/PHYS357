@@ -47,12 +47,12 @@ Jy = np.array([[0,-1j,0],[1j,0,-1j],[0,1j,0]])/np.sqrt(2)
 # Jx eigenstates
 ex,vx = np.linalg.eigh(Jx)
 ex,vx = np.flipud(ex), np.fliplr(vx)
-xbra=np.conj(vx).T  # z to x
+xbra = np.conj(vx).T  # z to x
 
 # Jy eigenstates
 ey,vy = np.linalg.eigh(Jy)
 ey,vy = np.flipud(ey), np.fliplr(vy)
-ybra=np.conj(vy).T  # z to y
+ybra = np.conj(vy).T  # z to y
 
 
 # Part A -------------------------------------
@@ -71,8 +71,8 @@ compute_prob('SGy', state_in_z, ybra, ey)
 print("\nPart B")
 # Rotation matrix (90 deg around z-axis)
 theta = np.pi/2
-Rz = R_matrix_z(theta)
-# Rz = R_from_J(Jz,theta)  # gives same thing
+# Rz = R_matrix_z(theta)
+Rz = R_from_J(Jz,theta)  # gives same thing
 
 # Rotate the eigenstates
 xbra_rotated = Rz@xbra

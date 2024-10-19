@@ -160,6 +160,7 @@ print("Part A")
 theta = np.pi/2
 Ry = R_from_J(Jy,theta)
 print(f'Rotation matrix:\n{np.round(np.abs(Ry),2)}')
+print(f'det = {np.linalg.det(Ry)}')
 # Other method
 R_in_y = R_matrix(theta)  # rotate around y-axis, in Jy basis
 R = yket@R_in_y@ybra # rotate the state expressed in Jz basis
