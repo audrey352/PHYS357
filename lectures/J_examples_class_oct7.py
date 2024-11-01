@@ -97,6 +97,8 @@ xket=vx
 
 Jxp=Jy+1J*Jz
 Jxp_pred=xket@Jp@xbra
+print(Jxp*np.exp(1j*np.pi/2))
+print(Jxp_pred)
 
 for i in range(len(m)):
     psi_raised=Jxp@vx[:,i]
