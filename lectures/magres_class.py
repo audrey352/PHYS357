@@ -14,7 +14,7 @@
 
 import numpy as np
 from matplotlib import pyplot as plt
-plt.ion()
+# plt.ion()
 
 def fun(t,psi,om_0,om_1,om):
     #return d Psi/dt, which we get from taking -i/2 []Psi, where [] is the
