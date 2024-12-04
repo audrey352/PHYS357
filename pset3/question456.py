@@ -161,7 +161,7 @@ plt.plot(gamma, errors, label='Error')
 # plt.plot(gamma, R1R2_max_err, label='Max error')
 plt.xlabel(r'$\gamma$')
 plt.legend()
-plt.savefig('question6.png')
+plt.savefig('/Users/audrey/Documents/PHYS357/pset3/question6.png')
 plt.show()
 
 
